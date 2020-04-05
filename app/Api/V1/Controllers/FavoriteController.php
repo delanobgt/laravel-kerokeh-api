@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Api\V1\Controllers;
 
 use Config;
 use App\User;
@@ -38,8 +38,9 @@ class FavoriteController extends Controller
         $folderPath = public_path() . "/song/$favorite->song_id";
         File::deleteDirectory($folderPath);
 
-        $favorite->song->delete();
+        $song_id = $favorite->song_id;
         $favorite->delete();
+        Song::destroy($song_id);
 
         return "OK";
     }

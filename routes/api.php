@@ -22,7 +22,7 @@ $api->version('v1', function (Router $api) {
         $api->post('/', 'App\\Api\\V1\\Controllers\\SongController@store');
     });
     $api->group(['prefix' => 'favorite', 'middleware' => 'jwt.auth'], function (Router $api) {
-        $api->delete('/{id}', 'App\\Api\\V1\\Controllers\\FavoriteController@delete');
+        $api->delete('/{id}', 'App\\Api\\V1\\Controllers\\FavoriteController@destroy');
     });
 
     $api->group(['middleware' => 'jwt.auth'], function (Router $api) {

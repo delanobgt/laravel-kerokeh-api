@@ -13,6 +13,6 @@ class Favorite extends Model
 
     public function song()
     {
-        return $this->belongsTo(Song::class, 'role_id', 'id');
+        return $this->belongsTo(Song::class, 'song_id', 'id');
     }
 }
