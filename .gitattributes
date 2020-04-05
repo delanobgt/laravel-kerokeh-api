@@ -1,0 +1,11 @@
+* text=auto
+*.css linguist-vendored
+*.scss linguist-vendored
+*.js linguist-vendored
+CHANGELOG.md export-ignore
+* text=auto
+*.txt text
+*.c text
+*.h text
+*.jpg binary
+* text=auto eol=lf
