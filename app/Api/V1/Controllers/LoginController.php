@@ -26,10 +26,9 @@ class LoginController extends Controller
         try {
             $token = Auth::guard()->attempt($credentials);
 
-            if(!$token) {
+            if (!$token) {
                 throw new AccessDeniedHttpException();
             }
-
         } catch (JWTException $e) {
             throw new HttpException(500);
         }
@@ -38,6 +37,7 @@ class LoginController extends Controller
             ->json([
                 'status' => 'ok',
                 'token' => $token,
+                'user' => Auth::guard()->user(),
                 'expires_in' => Auth::guard()->factory()->getTTL() * 60
             ]);
     }

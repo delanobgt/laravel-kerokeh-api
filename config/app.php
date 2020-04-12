@@ -152,6 +152,8 @@ return [
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Dingo\Api\Provider\LaravelServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
+        Alaouy\Youtube\YoutubeServiceProvider::class,
+        Atomescrochus\Musixmatch\MusixmatchServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -209,6 +211,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Youtube' => Alaouy\Youtube\Facades\Youtube::class,
 
         /*
          * Package Facades...

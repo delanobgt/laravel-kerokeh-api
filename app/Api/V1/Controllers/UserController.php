@@ -2,12 +2,8 @@
 
 namespace App\Api\V1\Controllers;
 
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Tymon\JWTAuth\JWTAuth;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Api\V1\Requests\LoginRequest;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Auth;
 
 class UserController extends Controller
@@ -30,5 +26,14 @@ class UserController extends Controller
     public function me()
     {
         return response()->json(Auth::guard()->user());
+    }
+
+    public function updateMe(Request $request)
+    {
+        $user = Auth::guard()->user();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+        return response()->json($user);
     }
 }

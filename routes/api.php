@@ -16,13 +16,18 @@ $api->version('v1', function (Router $api) {
         $api->post('logout', 'App\\Api\\V1\\Controllers\\LogoutController@logout');
         $api->post('refresh', 'App\\Api\\V1\\Controllers\\RefreshController@refresh');
         $api->get('me', 'App\\Api\\V1\\Controllers\\UserController@me');
+        $api->put('me', 'App\\Api\\V1\\Controllers\\UserController@updateMe');
     });
 
-    $api->group(['prefix' => 'song', 'middleware' => 'jwt.auth'], function (Router $api) {
-        $api->post('/', 'App\\Api\\V1\\Controllers\\SongController@store');
-    });
     $api->group(['prefix' => 'favorite', 'middleware' => 'jwt.auth'], function (Router $api) {
+        $api->get('/', 'App\\Api\\V1\\Controllers\\FavoriteController@index');
+        $api->post('/', 'App\\Api\\V1\\Controllers\\FavoriteController@store');
+        $api->put('/{id}', 'App\\Api\\V1\\Controllers\\FavoriteController@update');
         $api->delete('/{id}', 'App\\Api\\V1\\Controllers\\FavoriteController@destroy');
+    });
+
+    $api->group(['prefix' => 'video', 'middleware' => 'jwt.auth'], function (Router $api) {
+        $api->get('/', 'App\\Api\\V1\\Controllers\\VideoController@search');
     });
 
     $api->group(['middleware' => 'jwt.auth'], function (Router $api) {

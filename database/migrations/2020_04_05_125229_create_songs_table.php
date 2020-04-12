@@ -17,6 +17,9 @@ class CreateSongsTable extends Migration
             $table->increments('id');
 
             $table->string('title');
+            $table->string('artist')->nullable();
+            $table->string('album')->nullable();
+            $table->string('genre')->nullable();
             $table->integer('duration')->nullable();
             $table->string('accompaniment_path')->nullable();
             $table->string('vocals_path')->nullable();
