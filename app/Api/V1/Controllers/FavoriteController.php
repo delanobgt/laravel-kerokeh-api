@@ -34,12 +34,23 @@ class FavoriteController extends Controller
     {
         $search = new MusixmatchHelper();
         $track = $search->trackSearch($request->title, $request->artist)->formatTrackSearch()->result();
+        $search = new MusixmatchHelper();
+        $lyrics = $search->getLyrics($track->track_id)->formatLyricsGet()->result();
 
         $song = new Song();
-        $song->title = $track->track_name;
-        $song->artist = $track->artist_name;
-        $song->album = $track->album_name;
-        $song->genre = $track->genre;
+        if ($track) {
+            $song->title = $track->track_name;
+            $song->artist = $track->artist_name;
+            $song->album = $track->album_name;
+            $song->genre = $track->genre;
+            $song->lyrics = $lyrics;
+        } else {
+            $song->title = $request->title;
+            $song->artist = $request->artist;
+            $song->album = "<unknown>";
+            $song->genre = "<unknown>";
+            $song->lyrics = "<unknown>";
+        }
         $song->save();
 
         // create dir if not exist yet
@@ -58,18 +69,23 @@ class FavoriteController extends Controller
         $mp3Info = new \wapmorgan\Mp3Info\Mp3Info($newPath, true);
         $song->duration = round($mp3Info->duration);
 
+        $songOutputFolderPath = "$currentSongFolderPath/output/$song->id";
+        if (!File::exists($songOutputFolderPath)) {
+            File::makeDirectory($songOutputFolderPath, $mode = 0777, true, false);
+        }
+
         // 3 minutes
         ini_set('max_execution_time', 180);
-        $cmd = "conda activate && python -m spleeter separate -i \"$newPath\" -o \"$currentSongFolderPath/output\" -p spleeter:2stems";
-        // exec($cmd);
+        $cmd = "conda activate && python -m spleeter separate -i \"$newPath\" -o \"$currentSongFolderPath/output\"";
+        exec($cmd);
 
         $songOutputFolderPath = "song/$song->id/output/$song->id";
 
         // convert to mp3s
         $cmd = "ffmpeg -i \"$songOutputFolderPath/accompaniment.wav\" -vn -ar 44100 -ac 2 -b:a 192k \"$songOutputFolderPath/accompaniment.mp3\"";
-        // exec($cmd);
+        exec($cmd);
         $cmd = "ffmpeg -i \"$songOutputFolderPath/vocals.wav\" -vn -ar 44100 -ac 2 -b:a 192k \"$songOutputFolderPath/vocals.mp3\"";
-        // exec($cmd);
+        exec($cmd);
 
         // update song in DB
         $song->accompaniment_path = "$songOutputFolderPath/accompaniment.mp3";
@@ -96,13 +112,24 @@ class FavoriteController extends Controller
     {
         $search = new MusixmatchHelper();
         $track = $search->trackSearch($request->title, $request->artist)->formatTrackSearch()->result();
+        $search = new MusixmatchHelper();
+        $lyrics = $search->getLyrics($track->track_id)->formatLyricsGet()->result();
 
         $favorite = Favorite::find($id);
         $song = Song::find($favorite->song_id);
-        $song->title = $track->track_name;
-        $song->artist = $track->artist_name;
-        $song->album = $track->album_name;
-        $song->genre = $track->genre;
+        if ($track) {
+            $song->title = $track->track_name;
+            $song->artist = $track->artist_name;
+            $song->album = $track->album_name;
+            $song->genre = $track->genre;
+            $song->lyrics = $lyrics;
+        } else {
+            $song->title = $request->title;
+            $song->artist = $request->artist;
+            $song->album = "<unknown>";
+            $song->genre = "<unknown>";
+            $song->lyrics = "<unknown>";
+        }
         $song->save();
 
         return response()->json(["status" => "ok"]);

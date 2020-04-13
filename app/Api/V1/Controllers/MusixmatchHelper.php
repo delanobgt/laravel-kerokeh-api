@@ -54,6 +54,15 @@ class MusixmatchHelper
         return $this;
     }
 
+    public function formatLyricsGet()
+    {
+        $this->formatter = function ($result) {
+            return $result->lyrics->lyrics_body;
+        };
+
+        return $this;
+    }
+
     ////
     // API functions
     ////

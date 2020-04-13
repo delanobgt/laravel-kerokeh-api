@@ -26,6 +26,11 @@ class VideoController extends Controller
         $search = new MusixmatchHelper();
         $album = $search->albumGet($albumId)->formatAlbumGet()->result();
 
-        return response()->json([$track, $album]);
+        $search = new MusixmatchHelper();
+        $lyrics = $search->getLyrics($track->track_id)->formatLyricsGet()->result();
+
+        dd($lyrics);
+
+        return response()->json($lyrics);
     }
 }
